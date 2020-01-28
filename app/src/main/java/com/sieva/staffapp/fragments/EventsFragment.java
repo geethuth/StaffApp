@@ -62,7 +62,7 @@ public class EventsFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         noData = eventView.findViewById(R.id.noData);
-        final TextView textView = eventView.findViewById(R.id.text_notifications);
+        //final TextView textView = eventView.findViewById(R.id.text_notifications);
         final TextView toolbarmsg = eventView.findViewById(R.id.toolbar_msg);
         toolbarmsg.setText("Events");
         floatingActionButton = eventView.findViewById(R.id.floatingActionButton);

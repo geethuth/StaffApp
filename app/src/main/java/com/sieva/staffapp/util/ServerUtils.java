@@ -10,4 +10,6 @@ public class ServerUtils {
     public static String TimetableApi = "stafftimetable.php";
     public static String FetchClassAlertsApi = "fetchclassalerts.php";
     public static String SubmitClassAlertsApi = "submitclassalert.php";
+    public static String FetchExamsApi ="fetchexam.php";
+    public static String FetchExamMarksApi ="fetchexammarks.php";
 }
