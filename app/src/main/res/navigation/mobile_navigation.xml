@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.sieva.staffapp.fragments.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_timetable"
+        android:name="com.sieva.staffapp.fragments.TimeTableFragment"
+        android:label="@string/title_timetable"
+        tools:layout="@layout/fragment_timetable" />
+
+    <fragment
+        android:id="@+id/navigation_events"
+        android:name="com.sieva.staffapp.fragments.EventsFragment"
+        android:label="@string/title_events"
+        tools:layout="@layout/fragment_events" />
+    <fragment
+        android:id="@+id/navigation_markentry"
+        android:name="com.sieva.staffapp.fragments.MarkentryFragment"
+        android:label="@string/title_markentry"
+        tools:layout="@layout/fragment_events" />
+</navigation>

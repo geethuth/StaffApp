@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#23A7DB</color>
+    <color name="colorPrimaryDark">#0784b5</color>
+    <color name="colorAccent">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="gradStart">#19AA8B</color>
+    <color name="lightoceangreen">#27dfb8</color>
+    <color name="gradStop">#23A7DB</color>
+    <color name="colorProgressBar">#FFCE511C</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="red">#b8050c</color>
+    <color name="green">#058629</color>
+    <color name="tabgreen">#c9fdbc</color>
+    <color name="tabpink">#f8c3e9</color>
+    <color name="tabyellow">#f2f8c3</color>
+
+    <color name="tabviolet">#a5e1f9</color>
+    <color name="tabred">#fba2a6</color>
+    <color name="tabblue">#b8affd</color>
+    <color name="taborange">#fdb1e7</color>
+    <color name="tabgreen1">#c2ffd0</color>
+
+    <color name="pendingBlue">#050d8c</color>
+    <color name="gray">#444343</color>
+    <color name="lightblue">#bce7fa</color>
+
+
+</resources>
