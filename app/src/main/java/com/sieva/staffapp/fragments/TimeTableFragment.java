@@ -23,16 +23,16 @@ public class TimeTableFragment extends Fragment {
         View timetableView = inflater.inflate(R.layout.fragment_timetable, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         final TextView toolbarmsg = timetableView.findViewById(R.id.toolbar_msg);
+
+        String[]days={"MON","TUE","WED","THU","FRI"};
         toolbarmsg.setText(getString(R.string.timetable));
         // Create an instance of the tab layout from the view.
         TabLayout tabLayout = timetableView.findViewById(R.id.tab_layout);
         // tabLayout.setTabTextColors(Color.GRAY, Color.WHITE);
         // Set the text for each tab.
-        tabLayout.addTab(tabLayout.newTab().setText("MON"));
-        tabLayout.addTab(tabLayout.newTab().setText("TUE"));
-        tabLayout.addTab(tabLayout.newTab().setText("WED"));
-        tabLayout.addTab(tabLayout.newTab().setText("THU"));
-        tabLayout.addTab(tabLayout.newTab().setText("FRI"));
+        for (String day : days) {
+            tabLayout.addTab(tabLayout.newTab().setText(day));
+        }
         // Set the tabs to fill the entire layout.
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         // Use PagerAdapterLeaveRequest to manage page views in fragments.

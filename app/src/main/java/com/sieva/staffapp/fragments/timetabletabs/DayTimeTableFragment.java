@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MondayFragment extends Fragment {
+public class DayTimeTableFragment extends Fragment {
 
     private RecyclerView
             recyclerView;
@@ -41,10 +41,14 @@ public class MondayFragment extends Fragment {
     private ProgressDialog
             pdia = null;
 
-    public MondayFragment() {
+    private String day;
+
+    public DayTimeTableFragment() {
         // Required empty public constructor
     }
-
+    public DayTimeTableFragment(String day) {
+       this.day=day;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +113,7 @@ public class MondayFragment extends Fragment {
             params.add(pair);
             pair = new Pair<>("staffid", PreferenceUtil.staffDetailsArray.get(0).getStaffId());
             params.add(pair);
-            pair = new Pair<>("day", "Monday");
+            pair = new Pair<>("day", day);
             params.add(pair);
             String
                     postString = Utils.createPostString(params);

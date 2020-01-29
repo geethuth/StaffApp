@@ -4,11 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.sieva.staffapp.fragments.timetabletabs.FridayFragment;
-import com.sieva.staffapp.fragments.timetabletabs.MondayFragment;
-import com.sieva.staffapp.fragments.timetabletabs.ThursdayFragment;
-import com.sieva.staffapp.fragments.timetabletabs.TuesdayFragment;
-import com.sieva.staffapp.fragments.timetabletabs.WednesdayFragment;
+import com.sieva.staffapp.fragments.timetabletabs.DayTimeTableFragment;
 
 
 public class PagerAdapterTimeTable extends FragmentStatePagerAdapter {
@@ -23,15 +19,15 @@ public class PagerAdapterTimeTable extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new MondayFragment();
+                return new DayTimeTableFragment("Monday");
             case 1:
-                return new TuesdayFragment();
+                return new DayTimeTableFragment("Tuesday");
             case 2:
-                return new WednesdayFragment();
+                return new DayTimeTableFragment("Wednesday");
             case 3:
-                return new ThursdayFragment();
+                return new DayTimeTableFragment("Thursday");
             case 4:
-                return new FridayFragment();
+                return new DayTimeTableFragment("Friday");
             default:
                 return null;
         }

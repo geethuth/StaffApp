@@ -52,13 +52,13 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.View
         System.out.println("Position: " + position);
         Random rnd = new Random();
         int currentColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        holder.finalLayout.getBackground().setTint(currentColor);
-        holder.initialLayout.getBackground().setTint(currentColor);
         if (mData != null) {
             if (mData.length() > 0) {
                 try {
-                    JSONObject
-                            datajson = mData.getJSONObject(position);
+                    JSONObject datajson = mData.getJSONObject(position);
+                    holder.finalLayout.getBackground().mutate().setTint(currentColor);
+                    //holder.finalLayout.getBackground().invalidateSelf();
+                    holder.initialLayout.getBackground().mutate().setTint(currentColor);
                     if (datajson.get("time") != null) {
                         String startTime = datajson.get("time").toString().split("-")[0];
                         int startHour = Integer.parseInt(startTime.split(":")[0]);
