@@ -5,23 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,42 +31,47 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
-public class LoginActivity extends AppCompatActivity {
-    RelativeLayout rellay1, rootview;
-    TextView appName;
-    EditText userText, passText;
-    Animation animation;
-    Button login;
+public class SplashScreen extends AppCompatActivity {
+
+    public static SharedPreferences
+            sharedPreferences;
+    public SharedPreferences.Editor editor;
+    public static final String
+            Username = "username", Password = "password", Flag = "flag";
     private ProgressDialog pdia;
     String response;
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            appName.clearAnimation();
-            rellay1.setVisibility(VISIBLE);
-            appName.setVisibility(GONE);
-
-        }
-    };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_login);
-        rellay1 = findViewById(R.id.relley1);
-        rootview = findViewById(R.id.rootView);
-        appName = findViewById(R.id.app_name);
-        userText = findViewById(R.id.username);
-        passText = findViewById(R.id.password);
-        login = findViewById(R.id.login_button);
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
-        appName.setAnimation(animation);
-        handler.postDelayed(runnable, 3000);
+        setContentView(R.layout.activity_splash_screen);
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        if (sharedPreferences.contains(Username) && sharedPreferences.contains(Password) && sharedPreferences.contains(Flag)) {
+            String
+                    usernameString = sharedPreferences.getString(Username, "");
+            String
+                    passwordString = sharedPreferences.getString(Password, "");
+            Integer
+                    flagValue = sharedPreferences.getInt(Flag, 0);
+            System.out.println("username:" + usernameString);
+            System.out.println("passwordString:" + passwordString);
+            System.out.println("flag:" + flagValue);
+            if (usernameString != null && passwordString != null && flagValue != 0) {
+                PreferenceUtil.username = usernameString;
+                PreferenceUtil.password = passwordString;
+                loginAPI();
+            } else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
+        } else {
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void loginAPI() {
@@ -114,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pdia = new ProgressDialog(LoginActivity.this);
+            pdia = new ProgressDialog(SplashScreen.this);
             pdia.setMessage("Validating credentials..");
             pdia.setCancelable(false);
             pdia.show();
@@ -180,14 +177,14 @@ public class LoginActivity extends AppCompatActivity {
                                     respjson.getJSONObject("profile").toString(),
                                     respjson.getJSONArray("subjects").toString(),
                                     respjson.getJSONArray("class").toString());
-                            Intent obj_intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent obj_intent = new Intent(SplashScreen.this, MainActivity.class);
                             startActivity(obj_intent);
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
-                        AlertDialog WrongPasswordAlert = new AlertDialog.Builder(LoginActivity.this).create();
+                        AlertDialog WrongPasswordAlert = new AlertDialog.Builder(SplashScreen.this).create();
                         WrongPasswordAlert.setTitle("Login Failed");
                         WrongPasswordAlert.setMessage("Please type correct credentials to login");
                         WrongPasswordAlert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
@@ -203,25 +200,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onCancel(DialogInterface dialogInterface) {
-        }
-    }
-
-    public void loginCheck(View view) {
-        PreferenceUtil.username = userText.getText().toString();
-        PreferenceUtil.password = passText.getText().toString();
-        System.out.println("username:" + PreferenceUtil.username);
-        System.out.println("pass:" + PreferenceUtil.password);
-        if (!userText.getText().toString().equals("") && !passText.getText().toString().equals("")) {
-            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            assert connectivityManager != null;
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                loginAPI();
-            } else {
-                Toast.makeText(this, "Please check your internet connectivity..", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(getApplication(), "Please enter your credentials", Toast.LENGTH_SHORT).show();
         }
     }
 }

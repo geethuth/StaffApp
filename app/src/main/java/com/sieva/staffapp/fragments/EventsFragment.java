@@ -13,8 +13,12 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,15 +43,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class EventsFragment extends Fragment {
+public class EventsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     FloatingActionButton floatingActionButton;
     ProgressDialog pdia;
     DatePickerDialog datePickerDialog;
     private RecyclerView
             recyclerView;
     TextView noData;
+    String className;
     JSONObject jsonObject;
     static EventDetailsAdapter eventDetailsAdapter;
+    private String[]
+            divisionArray;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,14 +67,59 @@ public class EventsFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        RelativeLayout
+                studentSelect = eventView.findViewById(R.id.student_select_popup);
+        Spinner studentSpinner = eventView.findViewById(R.id.studentSpinner);
 
+        if (PreferenceUtil.subjectDetailsArray != null) {
+            //studentName.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
+            divisionArray = new String[PreferenceUtil.subjectDetailsArray.size()];
+
+            if (!PreferenceUtil.subjectDetailsArray.isEmpty()) {
+                for (int i = 0; i < PreferenceUtil.subjectDetailsArray.size(); i++) {
+                    divisionArray[i] = PreferenceUtil.subjectDetailsArray.get(i).getSubjectClassName() + "-" + PreferenceUtil.subjectDetailsArray.get(i).getSubjectClassDivision();
+
+                }
+            }
+        } else if (PreferenceUtil.classDetailsArray != null) {
+            divisionArray = new String[PreferenceUtil.classDetailsArray.size()];
+            if (!PreferenceUtil.classDetailsArray.isEmpty()) {
+                for (int i = 0; i < PreferenceUtil.classDetailsArray.size(); i++) {
+                    divisionArray[i] = PreferenceUtil.classDetailsArray.get(i).getClassName() + "-" + PreferenceUtil.classDetailsArray.get(i).getClassDivision();
+                }
+            }
+        }
+        ArrayAdapter<String> adapter_student = new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                divisionArray);
+        if (PreferenceUtil.subjectDetailsArray != null) {
+            if (!PreferenceUtil.subjectDetailsArray.isEmpty()) {
+                className = PreferenceUtil.subjectDetailsArray.get(0).getSubjectClassName() + "-" + PreferenceUtil.subjectDetailsArray.get(0).getSubjectClassDivision();
+            }
+        } else if (PreferenceUtil.classDetailsArray != null) {
+            if (!PreferenceUtil.classDetailsArray.isEmpty()) {
+                className = PreferenceUtil.classDetailsArray.get(0).getClassName() + "-" + PreferenceUtil.classDetailsArray.get(0).getClassDivision();
+            }
+        }
+
+        adapter_student.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        studentSpinner.setAdapter(adapter_student);
+        studentSpinner.setOnItemSelectedListener(EventsFragment.this);
+
+        if (className != null) {
+            int spinnerPosition = adapter_student.getPosition(className);
+            studentSpinner.setSelection(spinnerPosition);
+        }
+
+        studentSelect.setOnClickListener(v -> studentSpinner.setOnItemSelectedListener(this));
         noData = eventView.findViewById(R.id.noData);
         //final TextView textView = eventView.findViewById(R.id.text_notifications);
         final TextView toolbarmsg = eventView.findViewById(R.id.toolbar_msg);
         toolbarmsg.setText("Events");
         floatingActionButton = eventView.findViewById(R.id.floatingActionButton);
 
-        displayAlertsAPI();
         floatingActionButton.setOnClickListener(v -> {
             LayoutInflater inflater1 = getLayoutInflater();
             View alertLayout = inflater1.inflate(R.layout.custom_event_dialog, null);
@@ -97,13 +149,13 @@ public class EventsFragment extends Fragment {
                     // Click action
                     datePickerDialog = new DatePickerDialog(getContext(), R.style.datepicker, (datePicker, selectedYear, selectedMonth, selectedDay) -> {
                         Log.d("Selected Date", selectedDay + " " + selectedMonth + " " + selectedYear);
-                        Date date = new Date();
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(selectedYear, selectedMonth, selectedDay);
-                        date.setTime(cal.getTime().getTime());
-                        SimpleDateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
-                        dt = dateFormat.format(date);
-                        startingDate.setText(dt);
+//                        Date date = new Date();
+//                        Calendar cal = Calendar.getInstance();
+//                        cal.set(selectedYear, selectedMonth, selectedDay);
+//                        date.setTime(cal.getTime().getTime());
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
+//                        dt = dateFormat.format(date);
+                        startingDate.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
                         // fuel_values.set(0,SD.getText());
                         startdate = startingDate.getText().toString();
                         Log.d("Selected start Date", startdate);
@@ -111,7 +163,7 @@ public class EventsFragment extends Fragment {
 
                     }, year, month, day);
                     // Set Max date and Min date for add date
-                    datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+                    // datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
                     // datePickerDialog.setTitle("Pick start date");
                     datePickerDialog.show();
                 }
@@ -203,6 +255,16 @@ public class EventsFragment extends Fragment {
         });
 
         return eventView;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        displayAlertsAPI();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
 
@@ -384,5 +446,4 @@ public class EventsFragment extends Fragment {
             recyclerView.setAdapter(eventDetailsAdapter);
         }
     }
-
 }

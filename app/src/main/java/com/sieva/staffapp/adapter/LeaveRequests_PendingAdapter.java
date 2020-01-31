@@ -91,7 +91,6 @@ public class LeaveRequests_PendingAdapter extends RecyclerView.Adapter<LeaveRequ
                     holder.approvaLayout.setOnClickListener(clickedView -> {
                         newPosition = holder.getAdapterPosition();
                         System.out.println("view holder newPosition: " + newPosition);
-
                         try {
                             if (datajson.get("requestid") != null && datajson.get("enddate") != null) {
                                 approveAPI(datajson.get("requestid").toString(), "1");

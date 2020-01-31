@@ -1,6 +1,7 @@
 package com.sieva.staffapp.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -64,4 +65,33 @@ public class Utils {
         alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setLayoutParams(layoutParams);
     }
 
+    public static void setSavePreferences(
+            SharedPreferences
+                    sharedPreferences,
+            String
+                    username,
+            String
+                    password,
+            Integer
+                    loginFlag,
+            String
+                    classDetails,
+            String
+                    profileDetails,
+            String
+                    subjectDetails) {
+
+        if (sharedPreferences != null) {
+
+            SharedPreferences.Editor
+                    editor = sharedPreferences.edit();
+            editor.putString("username", username);
+            editor.putString("password", password);
+            editor.putInt("flag", loginFlag);
+            editor.putString("classDetails", classDetails);
+            editor.putString("profileDetails", profileDetails);
+            editor.putString("subjectDetails", subjectDetails);
+            editor.apply();
+        }
+    }
 }

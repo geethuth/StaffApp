@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_bg"
+    android:background="@drawable/pattern"
     android:scrollbars="vertical"
     app:ignore="NamespaceTypo">
 
@@ -72,10 +72,10 @@
                         android:background="@drawable/off" />
 
                     <TextView
-                        android:layout_below="@id/settings"
                         android:id="@+id/staffname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/settings"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:fontFamily="serif"

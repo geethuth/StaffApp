@@ -7,7 +7,9 @@
         android:id="@+id/leave_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/tabyellow" />
+        android:background="@drawable/pattern"
+        android:backgroundTint="#80FFFFFF"
+        android:backgroundTintMode="src_over" />
 
     <TextView
         android:id="@+id/no_data"

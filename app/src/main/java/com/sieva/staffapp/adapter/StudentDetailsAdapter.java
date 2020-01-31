@@ -1,6 +1,7 @@
 package com.sieva.staffapp.adapter;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.sieva.staffapp.pojoclass.StudentListPOJO;
 import java.util.ArrayList;
 
 import static com.sieva.staffapp.fragments.AttendanceFragment.additem;
+import static com.sieva.staffapp.fragments.AttendanceFragment.removeitem;
 
 public class StudentDetailsAdapter extends RecyclerView.Adapter<StudentDetailsAdapter.ViewHolder> {
 
@@ -26,6 +28,8 @@ public class StudentDetailsAdapter extends RecyclerView.Adapter<StudentDetailsAd
             mContext;
     int itemCount;
     int newPos;
+    boolean checked = true;
+    private final SparseBooleanArray array = new SparseBooleanArray();
 
     public StudentDetailsAdapter(Context context, ArrayList<StudentListPOJO> data) {
         this.mContext = context;
@@ -35,12 +39,14 @@ public class StudentDetailsAdapter extends RecyclerView.Adapter<StudentDetailsAd
     @NonNull
     @Override
     public StudentDetailsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // checked=true;
         return new ViewHolder(LayoutInflater.from(mContext).
                 inflate(R.layout.student_details_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull StudentDetailsAdapter.ViewHolder holder, int position) {
+        // holder.myToggleButton.setChecked(true);
 
         StudentListPOJO
                 studentListPOJO = mData.get(position);
@@ -50,10 +56,22 @@ public class StudentDetailsAdapter extends RecyclerView.Adapter<StudentDetailsAd
         if (studentListPOJO.getStudentId() != null) {
             holder.studentId.setText("ID: " + studentListPOJO.getStudentId());
         }
+//        if (!checked) {
+//            newPos = holder.getAdapterPosition();
+//            additem(newPos, String.valueOf(checked));
+//            holder.myToggleButton.setChecked(checked);
+//        }
+
         holder.myToggleButton.setOnClickListener(arg0 -> {
             newPos = holder.getAdapterPosition();
             System.out.println("position: " + newPos);
-            additem(newPos, String.valueOf(holder.myToggleButton.isChecked()));
+            checked = holder.myToggleButton.isChecked();
+            holder.myToggleButton.setChecked(holder.myToggleButton.isChecked());
+            if (!checked) {
+                additem(newPos);
+            } else {
+                removeitem(newPos);
+            }
         });
     }
 
@@ -74,8 +92,20 @@ public class StudentDetailsAdapter extends RecyclerView.Adapter<StudentDetailsAd
             studentName = itemView.findViewById(R.id.studentName);
             studentId = itemView.findViewById((R.id.studentID));
             myToggleButton = itemView.findViewById(R.id.attendanceEntry);
-           // boolean mBool = true;
+            myToggleButton.setOnClickListener(v -> {
+                checked = myToggleButton.isChecked();
+                System.out.println("getAdapterPosition(): " + getAdapterPosition());
+                array.put(getAdapterPosition(), checked);
+                // notifyDataSetChanged();
+            });
+
+            // boolean mBool = true;
             //myToggleButton.setChecked(mBool);
+//            myToggleButton.setOnClickListener(v -> {
+//                myToggleButton.setChecked(false);
+//                int pro = getAdapterPosition();
+//                System.out.println("position:" + pro);
+//            });
         }
     }
 

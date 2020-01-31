@@ -28,7 +28,6 @@ import com.sieva.staffapp.R;
 import com.sieva.staffapp.activity.MainActivity;
 import com.sieva.staffapp.adapter.StudentDetailsAdapter;
 import com.sieva.staffapp.httpRequest.CustomHttpClient;
-import com.sieva.staffapp.pojoclass.StudentListPOJO;
 import com.sieva.staffapp.util.PreferenceUtil;
 import com.sieva.staffapp.util.ServerUtils;
 import com.sieva.staffapp.util.Utils;
@@ -42,15 +41,14 @@ import java.util.Objects;
 
 public class AttendanceFragment extends Fragment {
     public static ArrayList<Integer> positionArray = new ArrayList<>();
-    public static ArrayList<String> toggleCheckedArray = new ArrayList<>();
+    ArrayList<String> absentIDArray = new ArrayList<>();
     public static String[] attendance;
 
-    private ArrayList<StudentListPOJO>
-            studentDetailsArray = new ArrayList<>();
+
     private RecyclerView
             recyclerView;
     private ProgressDialog pdia;
-    private String response;
+    private String response, absentIDs;
     private Button dateButton;
     private DatePickerDialog datePickerDialog;
 
@@ -126,27 +124,65 @@ public class AttendanceFragment extends Fragment {
             setStudentDetailsToAdapter();
         }
         //********************************************************************
+        cancel.setOnClickListener(view -> {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
         submit.setOnClickListener(view -> {
 
             int month = Integer.parseInt(dateButton.getText().toString().split("/+")[1]);
             int year = Integer.parseInt(dateButton.getText().toString().split("/+")[2]);
-
-            System.out.println("positionArray: " + positionArray);
-            System.out.println("toggleCheckedArray: " + toggleCheckedArray);
-            ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
-            assert connectivityManager != null;
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                submitAttendanceAPI(month, year, dateButton.getText().toString(), positionArray, toggleCheckedArray);
+            System.out.println("positionArray submit: " + positionArray);
+            if (positionArray.isEmpty()) {
+                absentIDs = "All students are present";
             } else {
-                Toast.makeText(getContext(), "Please check your internet connectivity..", Toast.LENGTH_SHORT).show();
+                absentIDs = "";
+                absentIDs = "{";
+
+                for (int i = 0; i < positionArray.size(); i++) {
+                    // absentIDArray.add(PreferenceUtil.StudentListArray.get(positionArray.get(i)).getStudentId());
+                    if (i == positionArray.size() - 1) {
+                        absentIDs += PreferenceUtil.StudentListArray.get(positionArray.get(i)).getStudentId();
+                    } else {
+                        absentIDs += PreferenceUtil.StudentListArray.get(positionArray.get(i)).getStudentId() + ",";
+                    }
+                }
+                absentIDs += "}";
+                System.out.println("absentIDs submit: " + absentIDs);
             }
+            AlertDialog SubmitAlert = new AlertDialog.Builder(Objects.requireNonNull(getContext())).create();
+            SubmitAlert.setTitle("Please Confirm");
+            if (positionArray.isEmpty()) {
+                SubmitAlert.setMessage(absentIDs);
+            } else {
+                SubmitAlert.setMessage("Absentees list:" + absentIDs);
+            }
+            SubmitAlert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
+                        ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+                        assert connectivityManager != null;
+                        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                            submitAttendanceAPI(month, year, dateButton.getText().toString(), positionArray);
+                        } else {
+                            Toast.makeText(getContext(), "Please check your internet connectivity..", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            );
+
+            SubmitAlert.setButton(AlertDialog.BUTTON_NEUTRAL, "Re-Entry", (dialogInterface, i) -> {
+                        dialogInterface.cancel();
+                    }
+            );
+            SubmitAlert.show();
+
         });
 
         return attendanceView;
     }
 
-    private void submitAttendanceAPI(int month, int year, String date, ArrayList<Integer> positionArray, ArrayList<String> toggleCheckedArray) {
+    private void submitAttendanceAPI(int month, int year, String date, ArrayList<Integer> positionArray) {
         String urls = ServerUtils.ServerUrl;
         String AttendanceServerUrl = ServerUtils.submitAttendanceAPI;
         ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -241,19 +277,24 @@ public class AttendanceFragment extends Fragment {
 
     private void setStudentDetailsToAdapter() {
         positionArray.clear();
-        toggleCheckedArray.clear();
         StudentDetailsAdapter
                 studentDetailsAdapter;
         if (PreferenceUtil.StudentListArray.size() > 0 && getActivity() != null) {
             studentDetailsAdapter = new StudentDetailsAdapter(getActivity(), PreferenceUtil.StudentListArray);
+            recyclerView.setItemViewCacheSize(PreferenceUtil.StudentListArray.size());
             recyclerView.setAdapter(studentDetailsAdapter);
-            System.out.println("size: " + positionArray);
-            System.out.println("size: " + positionArray.size());
+            System.out.println("positionArray: " + positionArray);
+            System.out.println("positionArray size: " + positionArray.size());
         }
     }
 
-    public static void additem(int position, String s) {
+    public static void additem(int position) {
         positionArray.add(position);
-        toggleCheckedArray.add(s);
+    }
+
+    public static void removeitem(int position) {
+        positionArray.remove(new Integer(position));
+        System.out.println("positionArray after removal: " + positionArray);
+
     }
 }

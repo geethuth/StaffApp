@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.sieva.staffapp.fragments.timetabletabs.DayTimeTableFragment;
+import com.sieva.staffapp.fragments.DayTimeTableFragment;
 
 
 public class PagerAdapterTimeTable extends FragmentStatePagerAdapter {

@@ -14,6 +14,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sieva.staffapp.R;
 import com.sieva.staffapp.activity.ClassTeacherActivity;
+import com.sieva.staffapp.activity.LoginActivity;
+import com.sieva.staffapp.activity.SplashScreen;
 import com.sieva.staffapp.adapter.SubjectDetailsAdapter;
 import com.sieva.staffapp.helper.StudentListDetailsHelper;
 import com.sieva.staffapp.httpRequest.CustomHttpClient;
@@ -39,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -58,11 +62,14 @@ public class HomeFragment extends Fragment {
         final TextView category = root.findViewById(R.id.category);
         final TextView classId = root.findViewById(R.id.classId);
         final TextView division = root.findViewById(R.id.division);
+        final ImageView logout = root.findViewById(R.id.logout);
         CardView classcardview = root.findViewById(R.id.classcardview);
         LinearLayout subjectLayout = root.findViewById(R.id.subjects_layout);
         LinearLayout attendanceLayout = root.findViewById(R.id.attendancelayout);
         LinearLayout leaveLayout = root.findViewById(R.id.leavelayout);
-
+        logout.setOnClickListener(view -> {
+            logoutAlert();
+        });
         if (PreferenceUtil.staffDetailsArray != null) {
             staffName.setText(PreferenceUtil.staffDetailsArray.get(0).getStaffName() + "  |  " + "ID: " + PreferenceUtil.staffDetailsArray.get(0).getStaffId());
             schoolName.setText(PreferenceUtil.staffDetailsArray.get(0).getSchoolName());
@@ -113,7 +120,40 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void leaveListAPI() {
+    private void logoutAlert() {
+        AlertDialog LogoutAlert = new AlertDialog.Builder(Objects.requireNonNull(getContext())).create();
+        LogoutAlert.setMessage(getString(R.string.logout_alert));
+
+        LogoutAlert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
+                    Utils.setSavePreferences(SplashScreen.sharedPreferences, "", "", 0, null, null, null);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivity(intent);
+                }
+        );
+
+        LogoutAlert.setButton(AlertDialog.BUTTON_NEUTRAL, "No", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                }
+        );
+        LogoutAlert.show();
+
+
+//        AlertDialog SignOutAlert = new AlertDialog.Builder(getActivity()).create();
+//        SignOutAlert.setTitle(getString(R.string.logout_alert));
+//         SignOutAlert.setButton(AlertDialog.BUTTON_POSITIVE,  getString(R.string.yes)),
+//        new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                SharedPreferences pref = getActivity().getSharedPreferences("DataStore", MODE_PRIVATE);
+//                SharedPreferences.Editor editor = pref.edit();
+//                editor.putInt("flag", 0);
+//                editor.putString("username", "0");
+//                editor.putString("password", "0");
+//                editor.apply();
+//                Intent i = new Intent(getContext(), LoginActivity.class);
+//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                getActivity().startActivity(i);
+//            }
+//        });
     }
 
     private void studentListAPI() {

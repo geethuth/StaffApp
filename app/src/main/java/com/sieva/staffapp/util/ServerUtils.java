@@ -1,7 +1,8 @@
 package com.sieva.staffapp.util;
 
 public class ServerUtils {
-    public static String ServerUrl = "http://23.239.28.100/mydealership/amritatracking_api/staff/";
+    public static String ServerUrl1 = "https://23.239.28.100/mydealership/amritatracking_api/staff/";
+    public static String ServerUrl = "http://139.59.12.16/gpstracking/api/staff/";
     public static String LoginApi = "stafflogin.php";
     public static String FetchstudentlistApi = "fetchstudentlist.php";
     public static String submitAttendanceAPI = "submitattendance.php";
@@ -10,6 +11,6 @@ public class ServerUtils {
     public static String TimetableApi = "stafftimetable.php";
     public static String FetchClassAlertsApi = "fetchclassalerts.php";
     public static String SubmitClassAlertsApi = "submitclassalert.php";
-    public static String FetchExamsApi ="fetchexam.php";
-    public static String FetchExamMarksApi ="fetchexammarks.php";
+    public static String FetchExamsApi = "fetchexam.php";
+    public static String FetchExamMarksApi = "fetchexammarks.php";
 }

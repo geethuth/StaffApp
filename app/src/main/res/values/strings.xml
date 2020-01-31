@@ -3,7 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_timetable">Time Table</string>
     <string name="title_events">Events</string>
-    <string name="title_markentry">Mark Entry</string>
+    <string name="title_markentry">Mark List</string>
     <string name="date_format">dd/MM/yyyy</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -13,4 +13,7 @@
     <string name="timetable">Time Table</string>
     <string name="status">Status:</string>
     <string name="approved">Approved</string>
+    <string name="the_teachers_app">The Teachers App</string>
+    <string name="logout_alert">Do you want to logout?</string>
+    <string name="yes">Yes</string>
 </resources>

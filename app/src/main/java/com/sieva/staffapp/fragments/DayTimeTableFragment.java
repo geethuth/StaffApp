@@ -1,4 +1,4 @@
-package com.sieva.staffapp.fragments.timetabletabs;
+package com.sieva.staffapp.fragments;
 
 
 import android.annotation.SuppressLint;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sieva.staffapp.R;
+import com.sieva.staffapp.adapter.LeaveRequests_ApprovedAdapter;
 import com.sieva.staffapp.adapter.TimeTableAdapter;
 import com.sieva.staffapp.httpRequest.CustomHttpClient;
 import com.sieva.staffapp.util.PreferenceUtil;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WednesdayFragment extends Fragment {
+public class DayTimeTableFragment extends Fragment {
 
     private RecyclerView
             recyclerView;
@@ -40,10 +41,14 @@ public class WednesdayFragment extends Fragment {
     private ProgressDialog
             pdia = null;
 
-    public WednesdayFragment() {
+    private String day;
+
+    public DayTimeTableFragment() {
         // Required empty public constructor
     }
-
+    public DayTimeTableFragment(String day) {
+       this.day=day;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,15 +62,15 @@ public class WednesdayFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState) {
 
-        View timetableview = inflater.inflate(
+        View timetableView = inflater.inflate(
                 R.layout.tab_timetablefragment_wednesday,
                 container,
                 false);
 
         /**********************************************************************************************/
 
-        recyclerView = timetableview.findViewById(R.id.period_list);
-        noData = timetableview.findViewById(R.id.no_data);
+        recyclerView = timetableView.findViewById(R.id.period_list);
+       noData = timetableView.findViewById(R.id.no_data);
 
         /**********************************************************************************************/
 
@@ -74,7 +79,8 @@ public class WednesdayFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
         timetableAPI();
-        return timetableview;
+
+        return timetableView;
     }
 
 
@@ -83,7 +89,7 @@ public class WednesdayFragment extends Fragment {
                 timeTableAdapter;
         if (detailsArray != null) {
             if (detailsArray.length() > 0 && getActivity() != null) {
-                timeTableAdapter = new TimeTableAdapter(getActivity(), detailsArray, "Wednesday");
+                timeTableAdapter = new TimeTableAdapter(getActivity(), detailsArray, "Monday");
                 recyclerView.setAdapter(timeTableAdapter);
             }
         }
@@ -107,7 +113,7 @@ public class WednesdayFragment extends Fragment {
             params.add(pair);
             pair = new Pair<>("staffid", PreferenceUtil.staffDetailsArray.get(0).getStaffId());
             params.add(pair);
-            pair = new Pair<>("day", "Wednesday");
+            pair = new Pair<>("day", day);
             params.add(pair);
             String
                     postString = Utils.createPostString(params);

@@ -54,11 +54,12 @@ public class EventDetailsAdapter extends RecyclerView.Adapter<EventDetailsAdapte
                         holder.eventContent.setText(datajson.get("content").toString());
                     }
                     if (datajson.get("submittedon") != null) {
-                        String dateString = datajson.get("submittedon").toString().split(" ")[0];
-                        System.out.println("datestring:" + dateString);
-                        String newDateString = dateString.split("-")[2] + "/" + dateString.split("-")[1] + "/" + dateString.split("-")[0];
-                        String timeString = datajson.get("submittedon").toString().split(" ")[1];
-                        holder.eventSubmitDate.setText("Submitted on: " + newDateString + " " + timeString);
+//                        String dateString = datajson.get("submittedon").toString().split(" ")[0];
+//                        System.out.println("datestring:" + dateString);
+//                        String newDateString = dateString.split("-")[2] + "/" + dateString.split("-")[1] + "/" + dateString.split("-")[0];
+//                        String timeString = datajson.get("submittedon").toString().split(" ")[1];
+//                        holder.eventSubmitDate.setText("Submitted on: " + newDateString + " " + timeString);
+                        holder.eventSubmitDate.setText("Submitted on: " + datajson.get("submittedon").toString());
                     }
 
                 } catch (JSONException e) {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,8 +24,11 @@ public class TimeTableFragment extends Fragment {
         View timetableView = inflater.inflate(R.layout.fragment_timetable, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         final TextView toolbarmsg = timetableView.findViewById(R.id.toolbar_msg);
-
-        String[]days={"MON","TUE","WED","THU","FRI"};
+        ImageView
+                refreshButton = timetableView.findViewById(R.id.refresh);
+        ImageView
+                toolbar_back_button = timetableView.findViewById(R.id.toolbar_back_button);
+        String[] days = {"MON", "TUE", "WED", "THU", "FRI"};
         toolbarmsg.setText(getString(R.string.timetable));
         // Create an instance of the tab layout from the view.
         TabLayout tabLayout = timetableView.findViewById(R.id.tab_layout);

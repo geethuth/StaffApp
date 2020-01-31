@@ -1,106 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/pattern"
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="3dp"
             android:layout_marginBottom="2dp"
+            android:background="@drawable/whiteborder_grey_box"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/std_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select Standard/Division" />
+                android:fontFamily="serif"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="2dp"
+                android:paddingBottom="2dp"
+                android:text="Select Standard/Division"
+                android:textStyle="italic" />
 
             <Spinner
                 android:id="@+id/std_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:padding="2dp"
+                android:popupBackground="@color/tabgreen1" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="3dp"
             android:layout_marginBottom="2dp"
+            android:background="@drawable/whiteborder_grey_box"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/subject_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select Subject" />
+                android:fontFamily="serif"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="2dp"
+                android:paddingBottom="2dp"
+                android:text="Select Subject"
+                android:textStyle="italic" />
 
             <Spinner
                 android:id="@+id/subject_spinner"
+                style="?android:attr/spinnerDropDownItemStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:padding="2dp"
+                android:popupBackground="@color/tabgreen1" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/whiteborder_grey_box"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/exam_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select Exam" />
+                android:fontFamily="serif"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="2dp"
+                android:paddingBottom="2dp"
+                android:text="Select Exam"
+                android:textStyle="italic" />
 
             <Spinner
                 android:id="@+id/exam_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:padding="2dp"
+                android:popupBackground="@color/tabgreen1" />
         </LinearLayout>
+
     </LinearLayout>
 
-    <FrameLayout
+    <RelativeLayout
+        android:id="@+id/examTitleLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <WebView
-            android:id="@+id/webview"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/student_select_popup"
+        android:background="#38bf9f">
+
+        <TextView
+            android:id="@+id/examTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/red" />
-    </FrameLayout>
+            android:layout_gravity="center_vertical"
+            android:fontFamily="serif"
+            android:gravity="center_horizontal"
+            android:padding="7dp"
+            android:text=""
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-    <!-- <TextView
-         android:id="@+id/text_notifications"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="8dp"
-         android:layout_marginTop="8dp"
-         android:layout_marginEnd="8dp"
-         android:textAlignment="center"
-         android:textSize="20sp"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="parent" />-->
+    <RelativeLayout
+        android:id="@+id/examDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/examTitleLayout"
+        android:background="#1f79ae">
 
+        <TextView
+            android:id="@+id/countTitle"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="start"
+            android:fontFamily="serif"
+            android:gravity="start|center_vertical"
+            android:padding="5dp"
+            android:text="ID:"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/subjectTitle"
+            android:layout_width="175dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/countTitle"
+            android:fontFamily="serif"
+            android:gravity="start|center_vertical"
+            android:padding="5dp"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/marksTitle"
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/subjectTitle"
+            android:fontFamily="serif"
+            android:gravity="start|center_vertical"
+            android:padding="5dp"
+            android:text="Marks"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/GradeTitle"
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/marksTitle"
+            android:fontFamily="serif"
+            android:gravity="start|center_vertical"
+            android:padding="5dp"
+            android:text="Grade"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/dynamicView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:scrollbars="vertical" />
+    </ScrollView>
 </LinearLayout>
