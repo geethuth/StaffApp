@@ -3,6 +3,7 @@ package com.sieva.staffapp.fragments.leaverequesttabs;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,11 +32,11 @@ import java.util.ArrayList;
 
 public class TabApprovedFragment extends Fragment {
 
-    private RecyclerView
+    private static RecyclerView
             recyclerView;
-    TextView noData;
-    private ProgressDialog
-            pdia=null;
+    static TextView noData;
+    static ProgressDialog pdia;
+    static Context context;
 
     public TabApprovedFragment() {
         // Required empty public constructor
@@ -66,30 +67,34 @@ public class TabApprovedFragment extends Fragment {
 
         /**********************************************************************************************/
 
-
+        context = getContext();
         if (getActivity() != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
-        approvedRequestAPI();
+        if (PreferenceUtil.classDetailsArray != null) {
+            approvedRequestAPI();
+        } else {
+            Utils.showAlertMessage(getActivity(), "Class details is currently unavailable");
+        }
 
         return approvedview;
     }
 
 
-    private void setStudentDetailsToAdapter(JSONArray detailsArray) {
+    private static void setStudentDetailsToAdapter(JSONArray detailsArray) {
         LeaveRequests_ApprovedAdapter
                 leaveRequestsAdapter;
         if (detailsArray != null) {
-            if (detailsArray.length() > 0 && getActivity() != null) {
-                leaveRequestsAdapter = new LeaveRequests_ApprovedAdapter(getActivity(), detailsArray);
+            if (detailsArray.length() > 0 && context != null) {
+                leaveRequestsAdapter = new LeaveRequests_ApprovedAdapter(context, detailsArray);
                 recyclerView.setAdapter(leaveRequestsAdapter);
             }
         }
     }
 
 
-    private void approvedRequestAPI() {
-
+    public static void approvedRequestAPI() {
+        noData.setVisibility(View.INVISIBLE);
         String
                 urls = ServerUtils.ServerUrl,
                 approvedServerUrl = ServerUtils.FetchleaverequestsApi,
@@ -121,15 +126,17 @@ public class TabApprovedFragment extends Fragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public class ApprovedTask extends AsyncTask<String, Void, String>
+    public static class ApprovedTask extends AsyncTask<String, Void, String>
             implements DialogInterface.OnCancelListener {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pdia = new ProgressDialog(getContext());
-            pdia.setMessage("Fetching");
-            pdia.setCancelable(true);
-            pdia.show();
+            if (context != null) {
+                pdia = new ProgressDialog(context);
+                pdia.setMessage("Fetching");
+                pdia.setCancelable(true);
+                pdia.show();
+            }
         }
 
         @Override
@@ -176,7 +183,7 @@ public class TabApprovedFragment extends Fragment {
                             e.printStackTrace();
                         }
                     } else {
-                        if (getActivity() != null) {
+                        if (context != null) {
                             recyclerView.setVisibility(View.INVISIBLE);
                             noData.setVisibility(View.VISIBLE);
                         }

@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,6 +71,23 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemSelect
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        ImageView refreshButton = eventView.findViewById(R.id.refresh);
+        refreshButton.setVisibility(View.VISIBLE);
+        refreshButton.setOnClickListener(view -> {
+            if (getActivity() != null) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                    if (PreferenceUtil.classDetailsArray != null) {
+                        displayAlertsAPI();
+                    } else {
+                        Utils.showAlertMessage(getActivity(), "Class details are currently unavailable");
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.internet_connectivity_check), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         RelativeLayout
                 studentSelect = eventView.findViewById(R.id.student_select_popup);
         Spinner studentSpinner = eventView.findViewById(R.id.studentSpinner);
@@ -248,7 +269,11 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemSelect
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        Utils.showAlertMessage(getActivity(), "Please enter the details");
                     }
+                } else {
+                    Utils.showAlertMessage(getActivity(), "Please enter the details");
                 }
             });
             dialog.show();
@@ -259,7 +284,11 @@ public class EventsFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        displayAlertsAPI();
+        if (PreferenceUtil.classDetailsArray != null) {
+            displayAlertsAPI();
+        } else {
+            Utils.showAlertMessage(getActivity(), "Class details are currently unavailable");
+        }
     }
 
     @Override

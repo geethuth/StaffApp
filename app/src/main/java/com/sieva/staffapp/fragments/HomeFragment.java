@@ -63,6 +63,7 @@ public class HomeFragment extends Fragment {
         final TextView classId = root.findViewById(R.id.classId);
         final TextView division = root.findViewById(R.id.division);
         final ImageView logout = root.findViewById(R.id.logout);
+        final ImageView settings = root.findViewById(R.id.settings);
         CardView classcardview = root.findViewById(R.id.classcardview);
         LinearLayout subjectLayout = root.findViewById(R.id.subjects_layout);
         LinearLayout attendanceLayout = root.findViewById(R.id.attendancelayout);
@@ -94,12 +95,20 @@ public class HomeFragment extends Fragment {
         } else {
             subjectLayout.setVisibility(View.GONE);
         }
+
+        settings.setOnClickListener(clickedView -> {
+            Intent intent = new Intent(getActivity(), ClassTeacherActivity.class);
+            intent.putExtra("selectedFragment", "settings");
+            startActivity(intent);
+        });
         attendanceLayout.setOnClickListener(clickedView -> {
             ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
             assert connectivityManager != null;
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                studentListAPI();
+                if (PreferenceUtil.classDetailsArray != null) {
+                    studentListAPI();
+                }
             } else {
                 Toast.makeText(getContext(), "Please check your internet connectivity..", Toast.LENGTH_SHORT).show();
             }
@@ -123,11 +132,14 @@ public class HomeFragment extends Fragment {
     private void logoutAlert() {
         AlertDialog LogoutAlert = new AlertDialog.Builder(Objects.requireNonNull(getContext())).create();
         LogoutAlert.setMessage(getString(R.string.logout_alert));
-
         LogoutAlert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
                     Utils.setSavePreferences(SplashScreen.sharedPreferences, "", "", 0, null, null, null);
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    getActivity().startActivity(intent);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                            Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    Objects.requireNonNull(getActivity()).finish();
                 }
         );
 
@@ -136,24 +148,6 @@ public class HomeFragment extends Fragment {
                 }
         );
         LogoutAlert.show();
-
-
-//        AlertDialog SignOutAlert = new AlertDialog.Builder(getActivity()).create();
-//        SignOutAlert.setTitle(getString(R.string.logout_alert));
-//         SignOutAlert.setButton(AlertDialog.BUTTON_POSITIVE,  getString(R.string.yes)),
-//        new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int which) {
-//                SharedPreferences pref = getActivity().getSharedPreferences("DataStore", MODE_PRIVATE);
-//                SharedPreferences.Editor editor = pref.edit();
-//                editor.putInt("flag", 0);
-//                editor.putString("username", "0");
-//                editor.putString("password", "0");
-//                editor.apply();
-//                Intent i = new Intent(getContext(), LoginActivity.class);
-//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                getActivity().startActivity(i);
-//            }
-//        });
     }
 
     private void studentListAPI() {
@@ -258,7 +252,8 @@ public class HomeFragment extends Fragment {
                 }
 
             } else {
-                Toast.makeText(getContext(), "Student list is not available", Toast.LENGTH_SHORT).show();
+                Utils.showAlertMessage(getActivity(), "Student list is not available. \nPlease try later.");
+                // Toast.makeText(getContext(), "Student list is not available", Toast.LENGTH_SHORT).show();
             }
         }//close onPostExecute
 

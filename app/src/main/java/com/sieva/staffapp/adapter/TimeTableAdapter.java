@@ -1,6 +1,9 @@
 package com.sieva.staffapp.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sieva.staffapp.R;
@@ -17,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,17 +67,18 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.View
                     holder.initialLayout.getBackground().mutate().setTint(currentColor);
                     if (datajson.get("time") != null) {
                         String startTime = datajson.get("time").toString().split("-")[0];
-                        int startHour = Integer.parseInt(startTime.split(":")[0]);
-                        int startMinute = Integer.parseInt(startTime.split(":")[1]);
+//                        int startHour = Integer.parseInt(startTime.split(":")[0]);
+//                        int startMinute = Integer.parseInt(startTime.split(":")[1]);
 
                         String endTime = datajson.get("time").toString().split("-")[1];
-                        int endHour = Integer.parseInt(endTime.split(":")[0]);
-                        int endMinute = Integer.parseInt(endTime.split(":")[1]);
+//                        int endHour = Integer.parseInt(endTime.split(":")[0]);
+//                        int endMinute = Integer.parseInt(endTime.split(":")[1]);
 
                         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                         Date d = new Date();
                         String dayOfTheWeek = sdf.format(d);
                         System.out.println("dayOfTheWeek: " + dayOfTheWeek);
+                        System.out.println("mDay: " + mDay);
                         if (mDay.equals(dayOfTheWeek)) {
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(d);
@@ -79,25 +86,37 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.View
                             int currentMinute = cal.get(Calendar.MINUTE);
                             System.out.println("minute hr: " + currentHour + "\t" + currentMinute);
 
-                            Calendar firstLimit = Calendar.getInstance();
-                            firstLimit.set(Calendar.HOUR, startHour);
-                            firstLimit.set(Calendar.MINUTE, startMinute);
+                            @SuppressLint("SimpleDateFormat") Date time1 = new SimpleDateFormat("HH:mm").parse(startTime);
+                            System.out.println("time1: " + time1);
 
-                            Calendar secondLimit = Calendar.getInstance();
-                            secondLimit.set(Calendar.HOUR, endHour);
-                            secondLimit.set(Calendar.MINUTE, endMinute);
+                            @SuppressLint("SimpleDateFormat") Date time2 = new SimpleDateFormat("HH:mm").parse(endTime);
+                            System.out.println("time2 " + time2);
 
-                            Calendar classTime = Calendar.getInstance();
-                            classTime.set(Calendar.HOUR, currentHour % 2);
-                            classTime.set(Calendar.MINUTE, currentMinute);
+                            @SuppressLint("SimpleDateFormat") Date currentTime = new SimpleDateFormat("HH:mm").parse(currentHour%12 + ":" + currentMinute);
+                            System.out.println("currentTime " + currentTime);
+                            if (time2.after(currentTime) && time1.before(currentTime)) {
+                                Bitmap largeIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.timetable_icon);
+                                NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, "my_channel_id_01")
+                                        .setLargeIcon(largeIcon)
+                                        .setSmallIcon(R.drawable.timetable_icon)
+                                        .setContentTitle("You have class now!!")
+                                        .setStyle(new NotificationCompat.BigTextStyle()
+                                                .bigText(mDay + " " + datajson.get("time").toString() +
+                                                        "\nClass:" + datajson.get("class").toString() + " " + datajson.get("division").toString() +
+                                                        "\t\tSubject: " + datajson.get("subject").toString()))
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
 
-                            if (classTime.after(firstLimit) && classTime.before(secondLimit)) {
+                                // notificationId is a unique int for each notification that you must define
+                                notificationManager.notify(1, builder.build());
+
                                 holder.timeRange.setText("NOW");
                                 holder.timeRange.setTextColor(Color.RED);
                             } else {
                                 holder.timeRange.setText(datajson.get("time").toString());
                                 holder.timeRange.setTextColor(Color.BLACK);
                             }
+
                         } else {
                             holder.timeRange.setText(datajson.get("time").toString());
                             holder.timeRange.setTextColor(Color.BLACK);
@@ -112,6 +131,8 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.View
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -122,7 +143,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.View
     @Override
     public int getItemCount() {
         //return mData.length();
-        return 3;
+        return mData.length();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

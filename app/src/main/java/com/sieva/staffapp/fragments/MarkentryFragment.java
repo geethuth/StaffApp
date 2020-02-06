@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,10 +44,12 @@ import java.util.Random;
 
 public class MarkentryFragment extends Fragment {
 
-    Spinner std_spinner, subject_spinner, exam_spinner;
-    String std, subject, exam, response;
-    ProgressDialog pdia;
-    View root;
+    private Spinner std_spinner, subject_spinner, exam_spinner;
+    private String std, subject, exam, response;
+    private ProgressDialog pdia;
+    private View root;
+    private TextView nodata;
+    private ScrollView scrollDynamic;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class MarkentryFragment extends Fragment {
         std_spinner = root.findViewById(R.id.std_spinner);
         subject_spinner = root.findViewById(R.id.subject_spinner);
         exam_spinner = root.findViewById(R.id.exam_spinner);
+        nodata = root.findViewById(R.id.noData);
+        scrollDynamic = root.findViewById(R.id.dynamicScroll);
 
         AdapterView.OnItemSelectedListener listner = new AdapterView.OnItemSelectedListener() {
             @Override
@@ -183,6 +188,9 @@ public class MarkentryFragment extends Fragment {
 
                 if (response.contains("success")) {
                     //markListAdapter();
+//                } else {
+//                    nodata.setVisibility(View.VISIBLE);
+//                    scrollDynamic.setVisibility(View.INVISIBLE);
                 }
             }
         }//close onPostExecute
@@ -193,6 +201,8 @@ public class MarkentryFragment extends Fragment {
     }
 
     private void markListAdapter() {
+        nodata.setVisibility(View.INVISIBLE);
+        scrollDynamic.setVisibility(View.VISIBLE);
 
         ViewGroup container = root.findViewById(R.id.dynamicView);
         container.removeAllViews();
@@ -373,6 +383,8 @@ public class MarkentryFragment extends Fragment {
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         exam_spinner.setAdapter(adapter);
                         exam = exam_spinner.getSelectedItem().toString();
+                    } else {
+                        Utils.showAlertMessage(getActivity(), "Exam details currently unavailable.");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

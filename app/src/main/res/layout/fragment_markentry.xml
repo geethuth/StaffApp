@@ -16,68 +16,81 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/whiteborder_grey_box"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/std_head"
+            <Space
+                android:id="@+id/fakeId"
+                android:layout_width="5dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:paddingStart="10dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="2dp"
-                android:paddingBottom="2dp"
-                android:text="Select Standard/Division"
-                android:textStyle="italic" />
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toStartOf="@+id/fakeId"
+                android:background="@drawable/whiteborder_grey_box"
+                android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/std_spinner"
+                <TextView
+                    android:id="@+id/std_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:paddingStart="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/select_class"
+                    android:textStyle="italic" />
+
+                <Spinner
+                    android:id="@+id/std_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/red"
+                    android:padding="2dp"
+                    android:popupBackground="@color/tabgreen1" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/red"
-                android:padding="2dp"
-                android:popupBackground="@color/tabgreen1" />
-        </LinearLayout>
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/fakeId"
+                android:background="@drawable/whiteborder_grey_box"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/whiteborder_grey_box"
-            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/subject_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:paddingStart="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/select_subject"
+                    android:textStyle="italic" />
 
-            <TextView
-                android:id="@+id/subject_head"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:paddingStart="10dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="2dp"
-                android:paddingBottom="2dp"
-                android:text="Select Subject"
-                android:textStyle="italic" />
-
-            <Spinner
-                android:id="@+id/subject_spinner"
-                style="?android:attr/spinnerDropDownItemStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/red"
-                android:padding="2dp"
-                android:popupBackground="@color/tabgreen1" />
-        </LinearLayout>
+                <Spinner
+                    android:id="@+id/subject_spinner"
+                    style="?android:attr/spinnerDropDownItemStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/red"
+                    android:padding="2dp"
+                    android:popupBackground="@color/tabgreen1" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,7 +111,7 @@
                 android:paddingTop="2dp"
                 android:paddingEnd="2dp"
                 android:paddingBottom="2dp"
-                android:text="Select Exam"
+                android:text="@string/select_exam"
                 android:textStyle="italic" />
 
             <Spinner
@@ -116,7 +129,6 @@
         android:id="@+id/examTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/student_select_popup"
         android:background="#38bf9f">
 
         <TextView
@@ -138,7 +150,6 @@
         android:id="@+id/examDetailsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/examTitleLayout"
         android:background="#1f79ae">
 
         <TextView
@@ -150,7 +161,7 @@
             android:fontFamily="serif"
             android:gravity="start|center_vertical"
             android:padding="5dp"
-            android:text="ID:"
+            android:text="@string/id"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -160,11 +171,11 @@
             android:layout_width="175dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/countTitle"
+            android:layout_toEndOf="@+id/countTitle"
             android:fontFamily="serif"
             android:gravity="start|center_vertical"
             android:padding="5dp"
-            android:text="Name"
+            android:text="@string/name"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -174,11 +185,11 @@
             android:layout_width="75dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/subjectTitle"
+            android:layout_toEndOf="@+id/subjectTitle"
             android:fontFamily="serif"
             android:gravity="start|center_vertical"
             android:padding="5dp"
-            android:text="Marks"
+            android:text="@string/marks"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -188,25 +199,40 @@
             android:layout_width="75dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/marksTitle"
+            android:layout_toEndOf="@+id/marksTitle"
             android:fontFamily="serif"
             android:gravity="start|center_vertical"
             android:padding="5dp"
-            android:text="Grade"
+            android:text="@string/grade"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/dynamicScroll"
+        style="@style/scrollbar_style"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:id="@+id/dynamicView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:scrollbars="vertical" />
+            android:orientation="vertical" />
     </ScrollView>
+
+    <TextView
+        android:id="@+id/noData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:fontFamily="serif"
+        android:text="@string/no_data_is_available_now"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
 </LinearLayout>

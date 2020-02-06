@@ -10,9 +10,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class SplashScreen extends AppCompatActivity {
@@ -41,11 +42,16 @@ public class SplashScreen extends AppCompatActivity {
             Username = "username", Password = "password", Flag = "flag";
     private ProgressDialog pdia;
     String response;
+    private CountDownTimer
+            countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -62,49 +68,61 @@ public class SplashScreen extends AppCompatActivity {
             if (usernameString != null && passwordString != null && flagValue != 0) {
                 PreferenceUtil.username = usernameString;
                 PreferenceUtil.password = passwordString;
-                loginAPI();
+                if (PreferenceUtil.username != null && PreferenceUtil.password != null) {
+                    getData();
+                } else {
+                    Utils.showAlertMessage(this, "User details is not available now");
+                }
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         } else {
 
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
+
     }
 
     private void loginAPI() {
         String urls = ServerUtils.ServerUrl;
         String loginServerUrl = ServerUtils.LoginApi;
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        assert connectivityManager != null;
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-            String loginUrl = urls + loginServerUrl;// Serverfilenames.loginUrl;
-            Log.d("login url", loginUrl);
-            try {
-                ArrayList<Pair> params = new ArrayList<>();
-                Pair<String, String> pair = new Pair<>("operation", "stafflogin");
-                params.add(pair);
-                pair = new Pair<>("username", PreferenceUtil.username);
-                params.add(pair);
-                pair = new Pair<>("password", PreferenceUtil.password); // android.telephony.TelephonyManager.getDeviceId()
-                params.add(pair);
-                String postString = Utils.createPostString(params);
-                Log.i("param", postString);
-                LoginTask loginTask = new LoginTask();
-                loginTask.execute(loginUrl, postString);
-            } catch (Exception e) {
-                e.printStackTrace();
+        String loginUrl = urls + loginServerUrl;// Serverfilenames.loginUrl;
+        Log.d("login url", loginUrl);
+        try {
+            ArrayList<Pair> params = new ArrayList<>();
+            Pair<String, String> pair = new Pair<>("operation", "stafflogin");
+            params.add(pair);
+            pair = new Pair<>("username", PreferenceUtil.username);
+            params.add(pair);
+            pair = new Pair<>("password", PreferenceUtil.password); // android.telephony.TelephonyManager.getDeviceId()
+            params.add(pair);
+            String postString = Utils.createPostString(params);
+            Log.i("param", postString);
+            LoginTask loginTask = new LoginTask();
+            loginTask.execute(loginUrl, postString);
+        } catch (Exception e) {
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
             }
-        } else {
-            Toast.makeText(this, "Server connectivity issue..", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(this, LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
+            displayRetryAlertDialog();
+            e.printStackTrace();
         }
     }
+
+    private void displayRetryAlertDialog() {
+        AlertDialog SuccessAlert = new AlertDialog.Builder(SplashScreen.this).create();
+        SuccessAlert.setTitle("NETWORK ERROR");
+        SuccessAlert.setMessage(getString(R.string.an_error_occured_while_loading_data_please_check_your_interneet_connectivity));
+        SuccessAlert.setButton(AlertDialog.BUTTON_POSITIVE, "Retry", (dialogInterface, i) -> {
+            getData();
+        });
+        SuccessAlert.show();
+    }
+
 
     @SuppressLint("StaticFieldLeak")
     public class LoginTask extends AsyncTask<String, Void, String> implements DialogInterface.OnCancelListener {
@@ -126,6 +144,7 @@ public class SplashScreen extends AppCompatActivity {
                 System.out.println("Enable_login response: " + response);
 
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
             return res;
@@ -135,6 +154,9 @@ public class SplashScreen extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (pdia != null && pdia.isShowing()) {
                 pdia.dismiss();
+            }
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
             }
             System.out.println("Enable_login response: " + response);
 
@@ -184,22 +206,82 @@ public class SplashScreen extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     } else {
-                        AlertDialog WrongPasswordAlert = new AlertDialog.Builder(SplashScreen.this).create();
-                        WrongPasswordAlert.setTitle("Login Failed");
-                        WrongPasswordAlert.setMessage("Please type correct credentials to login");
-                        WrongPasswordAlert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                (dialog, which) -> dialog.dismiss());
-                        WrongPasswordAlert.show();
+                        getData();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    getData();
                 }
 
+            } else {
+                getData();
             }
         }//close onPostExecute
 
         @Override
         public void onCancel(DialogInterface dialogInterface) {
+        }
+    }
+
+    public void getData() {
+        ConnectivityManager
+                connectivityManager = (ConnectivityManager)
+                Objects.requireNonNull(getSystemService(Context.CONNECTIVITY_SERVICE));
+        NetworkInfo
+                activeNetworkInfo;
+        if (connectivityManager != null) {
+            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                startCountDowntimer();
+                loginAPI();
+            } else {
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+                startCountDowntimer();
+            }
+        } else {
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
+            startCountDowntimer();
+        }
+    }
+
+    private void startCountDowntimer() {
+        Log.d("startCountDowntimer", "called");
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        Log.d("startCountDowntimer", "called1");
+        countDownTimer = new CountDownTimer(20000, 10000) {
+            public void onTick(long millisUntilFinished) {
+                Log.e("startCountDowntimer", "" + String.format("%02d:%02d", (millisUntilFinished % 3600) / 60, (millisUntilFinished % 60)));
+
+            }
+
+            public void onFinish() {
+
+                Log.d("startCountDowntimer", "finish");
+                displayRetryAlertDialog();
+            }
+        }.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (countDownTimer != null) {
+            countDownTimer.start();
         }
     }
 }

@@ -3,7 +3,10 @@ package com.sieva.staffapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sieva.staffapp.R;
-import com.sieva.staffapp.adapter.LeaveRequests_ApprovedAdapter;
 import com.sieva.staffapp.adapter.TimeTableAdapter;
 import com.sieva.staffapp.httpRequest.CustomHttpClient;
 import com.sieva.staffapp.util.PreferenceUtil;
@@ -33,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.sieva.staffapp.fragments.TimeTableFragment.refreshButton;
+
 public class DayTimeTableFragment extends Fragment {
 
     private RecyclerView
@@ -46,8 +51,9 @@ public class DayTimeTableFragment extends Fragment {
     public DayTimeTableFragment() {
         // Required empty public constructor
     }
+
     public DayTimeTableFragment(String day) {
-       this.day=day;
+        this.day = day;
     }
 
     @Override
@@ -70,16 +76,32 @@ public class DayTimeTableFragment extends Fragment {
         /**********************************************************************************************/
 
         recyclerView = timetableView.findViewById(R.id.period_list);
-       noData = timetableView.findViewById(R.id.no_data);
+        noData = timetableView.findViewById(R.id.no_data);
 
         /**********************************************************************************************/
-
-
+        refreshButton.setOnClickListener(view -> {
+            if (getActivity() != null) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                    if (PreferenceUtil.staffDetailsArray != null) {
+                        timetableAPI();
+                    } else {
+                        Utils.showAlertMessage(getActivity(), "Staff details are currently unavailable");
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.internet_connectivity_check), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         if (getActivity() != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
-        timetableAPI();
-
+        if (PreferenceUtil.staffDetailsArray != null) {
+            timetableAPI();
+        } else {
+            Utils.showAlertMessage(getActivity(), "Staff details are currently unavailable");
+        }
         return timetableView;
     }
 
@@ -89,7 +111,8 @@ public class DayTimeTableFragment extends Fragment {
                 timeTableAdapter;
         if (detailsArray != null) {
             if (detailsArray.length() > 0 && getActivity() != null) {
-                timeTableAdapter = new TimeTableAdapter(getActivity(), detailsArray, "Monday");
+//                timeTableAdapter = new TimeTableAdapter(getActivity(), detailsArray, "Monday");
+                timeTableAdapter = new TimeTableAdapter(getActivity(), detailsArray, day);
                 recyclerView.setAdapter(timeTableAdapter);
             }
         }
@@ -97,6 +120,7 @@ public class DayTimeTableFragment extends Fragment {
 
 
     private void timetableAPI() {
+        noData.setVisibility(View.INVISIBLE);
 
         String
                 urls = ServerUtils.ServerUrl,

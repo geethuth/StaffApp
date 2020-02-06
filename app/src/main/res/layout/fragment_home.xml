@@ -313,6 +313,7 @@
 
     <LinearLayout
         android:id="@+id/subjects_layout"
+        style="@style/scrollbar_style"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/classcardview"

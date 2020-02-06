@@ -17,17 +17,16 @@ import com.sieva.staffapp.R;
 import com.sieva.staffapp.adapter.PagerAdapterTimeTable;
 
 public class TimeTableFragment extends Fragment {
-
+    public static ImageView
+            refreshButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View timetableView = inflater.inflate(R.layout.fragment_timetable, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         final TextView toolbarmsg = timetableView.findViewById(R.id.toolbar_msg);
-        ImageView
-                refreshButton = timetableView.findViewById(R.id.refresh);
-        ImageView
-                toolbar_back_button = timetableView.findViewById(R.id.toolbar_back_button);
+        refreshButton = timetableView.findViewById(R.id.refresh);
+        refreshButton.setVisibility(View.VISIBLE);
         String[] days = {"MON", "TUE", "WED", "THU", "FRI"};
         toolbarmsg.setText(getString(R.string.timetable));
         // Create an instance of the tab layout from the view.

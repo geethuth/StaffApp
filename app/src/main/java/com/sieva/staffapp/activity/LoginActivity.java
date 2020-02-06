@@ -152,7 +152,6 @@ public class LoginActivity extends AppCompatActivity {
                     //Log.d(TAG, response);
                     if (response != null && response.contains("true")) {
                         try {
-                            //  JSONObject datajson = respjson.getJSONObject("profile");
                             String authcode = respjson.getString("authcode");
                             System.out.println("authcode   " + authcode);
                             PreferenceUtil.authCode = authcode;
@@ -172,14 +171,16 @@ public class LoginActivity extends AppCompatActivity {
                                         classArray = respjson.getJSONArray("class");
                                 PreferenceUtil.classDetailsArray = ClassDetailsHelper.getClassList(classArray.toString());
                             }
-                            Utils.setSavePreferences(
-                                    SplashScreen.sharedPreferences,
-                                    PreferenceUtil.username,
-                                    PreferenceUtil.password,
-                                    PreferenceUtil.flag,
-                                    respjson.getJSONObject("profile").toString(),
-                                    respjson.getJSONArray("subjects").toString(),
-                                    respjson.getJSONArray("class").toString());
+                            if ((response.contains("profile")) && (response.contains("subjects")) && (response.contains("class"))) {
+                                Utils.setSavePreferences(
+                                        SplashScreen.sharedPreferences,
+                                        PreferenceUtil.username,
+                                        PreferenceUtil.password,
+                                        PreferenceUtil.flag,
+                                        respjson.getJSONObject("profile").toString(),
+                                        respjson.getJSONArray("subjects").toString(),
+                                        respjson.getJSONArray("class").toString());
+                            }
                             Intent obj_intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(obj_intent);
 
@@ -216,7 +217,11 @@ public class LoginActivity extends AppCompatActivity {
             assert connectivityManager != null;
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                loginAPI();
+                if (PreferenceUtil.username != null && PreferenceUtil.password != null) {
+                    loginAPI();
+                }else{
+                    Utils.showAlertMessage(this,"User details is not available now");
+                }
             } else {
                 Toast.makeText(this, "Please check your internet connectivity..", Toast.LENGTH_SHORT).show();
             }

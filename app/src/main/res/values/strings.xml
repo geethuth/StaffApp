@@ -8,7 +8,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="no_data_available">No data available...</string>
+    <string name="no_data_available">No data available…</string>
     <string name="approval">Approval</string>
     <string name="timetable">Time Table</string>
     <string name="status">Status:</string>
@@ -16,4 +16,27 @@
     <string name="the_teachers_app">The Teachers App</string>
     <string name="logout_alert">Do you want to logout?</string>
     <string name="yes">Yes</string>
+    <string name="internet_connectivity_check">Please check your internet connectivity</string>
+    <string name="confirm_password_correctly">Please confirm password correctly</string>
+    <string name="enter_valid_data_for_fields">Please enter valid data for fields marked as important(*)</string>
+    <string name="enter_correct_old_password">Please enter correct old password.</string>
+    <string name="enter_new_password">Please enter new password.</string>
+
+    <string name="select_subject">Select Subject</string>
+    <string name="select_class">Select class</string>
+    <string name="select_exam">Select Exam</string>
+    <string name="id">ID:</string>
+    <string name="name">Name</string>
+    <string name="marks">Marks</string>
+    <string name="grade">Grade</string>
+    <string name="no_data_is_available_now">No data is available now</string>
+    <string name="an_error_occured_while_loading_data_please_check_your_interneet_connectivity">An error occured while loading the data. Please check your interneet connectivity.</string>
+
+    <string name="retry">Retry</string>
+    <string name="network_error">Network error</string>
+    <string name="nullvalue">null</string>
+    <string name="old_password">Old password *</string>
+    <string name="new_password">New password *</string>
+    <string name="submit">Submit</string>
+    <string name="confirm_password">Confirm password *</string>
 </resources>

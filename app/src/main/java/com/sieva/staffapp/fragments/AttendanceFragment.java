@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +67,12 @@ public class AttendanceFragment extends Fragment {
 
         final TextView toolbarmsg = attendanceView.findViewById(R.id.toolbar_msg);
         toolbarmsg.setText("Attendance");
+        ImageView
+                toolbar_back_button = attendanceView.findViewById(R.id.toolbar_back_button);
+        toolbar_back_button.setVisibility(View.VISIBLE);
+        if (getActivity() != null) {
+            toolbar_back_button.setOnClickListener((View v) -> getActivity().onBackPressed());
+        }
         attendance = new String[PreferenceUtil.StudentListArray.size()];
 
         dateButton = attendanceView.findViewById(R.id.date);
@@ -130,8 +137,8 @@ public class AttendanceFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        submit.setOnClickListener(view -> {
 
+        submit.setOnClickListener(view -> {
             int month = Integer.parseInt(dateButton.getText().toString().split("/+")[1]);
             int year = Integer.parseInt(dateButton.getText().toString().split("/+")[2]);
             System.out.println("positionArray submit: " + positionArray);

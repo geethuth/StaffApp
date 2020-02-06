@@ -15,7 +15,13 @@
     <color name="tabgreen">#c9fdbc</color>
     <color name="tabpink">#f8c3e9</color>
     <color name="tabyellow">#f2f8c3</color>
+    <color name="blueBlack">#192936</color>
+    <color name="darkyellow">#ffba14</color>
+    <color name="colorBlue">#2FB4FF</color>
+    <color name="colorBlueT">#642fb4ff</color>
 
+    <color name="colorPurple">#983CFF</color>
+    <color name="colorPurpleT">#64983cff</color>
     <color name="tabviolet">#a5e1f9</color>
     <color name="tabred">#fba2a6</color>
     <color name="tabblue">#b8affd</color>
